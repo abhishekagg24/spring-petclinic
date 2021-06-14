@@ -25,3 +25,22 @@ jobs:
           TargetFolder: $(Build.ArtifactStagingDirectory)
       - upload: $(Build.ArtifactStagingDirectory)
         artifact: drop
+  - deployment: VMDeploy
+    displayName: web
+    pool:
+      vmImage: 'Ubuntu-16.04'
+    environment:
+      name: guidewirepool
+      resourceType: VirtualMachine
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - download: current
+            artifact: drop
+          - script: |
+                # Modify deployment script based on the app type
+                echo "Starting deployment script run"
+                sudo systemctl stop tomcat
+                sudo cp '$(Pipeline.Workspace)/drop/**/target/*.jar'  /opt/tomcat/webapps
+                sudo systemctl start tomcat
