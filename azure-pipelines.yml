@@ -36,7 +36,7 @@ stages:
     - deployment: VMDeploy
       displayName: web
       dependsOn: Build
-      condition: susucceeded()
+      condition: succeeded()
       pool:
        vmImage: 'Ubuntu-16.04'
       environment:
